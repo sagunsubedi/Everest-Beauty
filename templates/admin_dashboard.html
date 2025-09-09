@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Admin Dashboard - Everest Beauty{% endblock %}
+
+{% block extra_css %}
+<style>
+.admin-dashboard-container {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(34,34,59,0.10);
+    padding: 40px 30px;
+    margin: 40px auto;
+    max-width: 1100px;
+}
+.admin-dashboard-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+.admin-dashboard-header h1 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--primary);
+}
+.admin-dashboard-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 30px;
+    margin-bottom: 40px;
+}
+.admin-card {
+    background: linear-gradient(120deg, #f2e9e4 0%, #c9ada7 100%);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(34,34,59,0.08);
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    transition: box-shadow 0.2s;
+}
+.admin-card:hover {
+    box-shadow: 0 8px 32px rgba(34,34,59,0.13);
+}
+.admin-card-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 10px;
+}
+.admin-card-value {
+    font-size: 2.1rem;
+    font-weight: 800;
+    color: var(--add-to-cart-bg);
+    margin-bottom: 8px;
+}
+.admin-card-link {
+    margin-top: auto;
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: underline;
+    font-size: 1rem;
+    opacity: 0.8;
+    transition: color 0.2s;
+}
+.admin-card-link:hover {
+    color: var(--add-to-cart-bg);
+    opacity: 1;
+}
+.admin-dashboard-section {
+    margin-bottom: 40px;
+}
+.admin-dashboard-section h3 {
+    color: var(--primary);
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 18px;
+}
+.admin-table {
+    width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(34,34,59,0.06);
+}
+.admin-table th, .admin-table td {
+    padding: 14px 18px;
+    text-align: left;
+}
+.admin-table th {
+    background: #f8f9fa;
+    color: var(--primary);
+    font-weight: 700;
+}
+.admin-table tr:nth-child(even) {
+    background: #f2e9e4;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-dashboard-container">
+    <div class="admin-dashboard-header">
+        <h1><i class="fas fa-tachometer-alt"></i> Admin Dashboard</h1>
+        <a href="/admin/" class="btn btn-primary">Go to Django Admin</a>
+    </div>
+    <div class="admin-dashboard-cards">
+        <div class="admin-card">
+            <div class="admin-card-title">Total Products</div>
+            <div class="admin-card-value">{{ total_products }}</div>
+            <a href="/admin/products/product/" class="admin-card-link">Manage Products</a>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-title">Total Users</div>
+            <div class="admin-card-value">{{ total_users }}</div>
+            <a href="/admin/user_management/user/" class="admin-card-link">Manage Users</a>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-title">Total Reviews</div>
+            <div class="admin-card-value">{{ total_reviews }}</div>
+            <a href="/admin/review_system/review/" class="admin-card-link">Manage Reviews</a>
+        </div>
+    </div>
+    <div class="admin-dashboard-section">
+        <h3>Recent Users</h3>
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Date Joined</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in recent_users %}
+                <tr>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.date_joined|date:"M d, Y H:i" }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="3" class="text-center">No recent users.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

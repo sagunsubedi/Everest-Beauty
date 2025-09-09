@@ -1,0 +1,254 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}About Us - Everest Beauty{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section position-relative overflow-hidden">
+    <div class="hero-bg-gradient">
+        <div class="hero-content position-absolute top-50 start-50 translate-middle text-center text-white">
+            <h1 class="display-4 fw-bold mb-3">About Everest Beauty</h1>
+            <p class="lead mb-4">Discover the story behind Nepal's premier beauty destination</p>
+        </div>
+    </div>
+</section>
+
+<!-- Mission Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4">
+                <h2 class="section-title">Our Mission</h2>
+                <p class="lead text-muted mb-4">
+                    To bring authentic, high-quality beauty products from the heart of Nepal to beauty enthusiasts worldwide, 
+                    while supporting local artisans and promoting sustainable beauty practices.
+                </p>
+                <p class="mb-4">
+                    We believe that beauty should be accessible, authentic, and environmentally conscious. 
+                    Every product in our collection is carefully curated to meet the highest standards of quality and efficacy.
+                </p>
+                <div class="row g-3">
+                    <div class="col-6">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <span>Authentic Products</span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <span>Local Support</span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <span>Sustainable Beauty</span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <span>Quality Assured</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="position-relative">
+                    <img src="{% static 'images/about-mission.jpg' %}" alt="Our Mission" class="img-fluid rounded shadow">
+                    <div class="position-absolute top-0 start-0 w-100 h-100 bg-primary opacity-10 rounded"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Story Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 order-lg-2 mb-4">
+                <h2 class="section-title">Our Story</h2>
+                <p class="lead text-muted mb-4">
+                    Founded in the beautiful valleys of Nepal, Everest Beauty was born from a passion for 
+                    authentic beauty and a desire to share the treasures of the Himalayas with the world.
+                </p>
+                <p class="mb-4">
+                    Our journey began when we discovered the incredible potential of natural ingredients 
+                    sourced from the pristine mountains and valleys of Nepal. From traditional skincare 
+                    secrets passed down through generations to modern formulations that meet international standards, 
+                    we've created a platform that celebrates both heritage and innovation.
+                </p>
+                <p class="mb-4">
+                    Today, we're proud to connect customers with the finest beauty products from Nepal, 
+                    supporting local communities and preserving traditional beauty wisdom for future generations.
+                </p>
+            </div>
+            <div class="col-lg-6 order-lg-1">
+                <div class="position-relative">
+                    <img src="{% static 'images/about-story.jpg' %}" alt="Our Story" class="img-fluid rounded shadow">
+                    <div class="position-absolute top-0 start-0 w-100 h-100 bg-secondary opacity-10 rounded"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Values Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-12">
+                <h2 class="section-title">Our Values</h2>
+                <p class="text-muted">The principles that guide everything we do</p>
+            </div>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="text-center p-4">
+                    <div class="value-icon mb-3">
+                        <i class="fas fa-leaf fa-3x text-success"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">Sustainability</h5>
+                    <p class="text-muted">
+                        We're committed to eco-friendly practices and sustainable sourcing, 
+                        ensuring our products are kind to both you and the planet.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="text-center p-4">
+                    <div class="value-icon mb-3">
+                        <i class="fas fa-heart fa-3x text-danger"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">Authenticity</h5>
+                    <p class="text-muted">
+                        Every product is carefully verified for authenticity, 
+                        ensuring you receive genuine beauty products from Nepal.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="text-center p-4">
+                    <div class="value-icon mb-3">
+                        <i class="fas fa-hands-helping fa-3x text-primary"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">Community</h5>
+                    <p class="text-muted">
+                        We support local artisans and communities, 
+                        helping preserve traditional beauty wisdom and create sustainable livelihoods.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="text-center p-4">
+                    <div class="value-icon mb-3">
+                        <i class="fas fa-star fa-3x text-warning"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">Quality</h5>
+                    <p class="text-muted">
+                        We maintain the highest standards of quality, 
+                        ensuring every product meets international safety and efficacy standards.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Team Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-12">
+                <h2 class="section-title">Meet Our Team</h2>
+                <p class="text-muted">The passionate individuals behind Everest Beauty</p>
+            </div>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-4">
+                <div class="team-member text-center">
+                    <div class="team-photo mb-3">
+                        <img src="{% static 'images/team-1.jpg' %}" alt="Team Member" class="img-fluid rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
+                    </div>
+                    <h5 class="fw-bold mb-2">Priya Sharma</h5>
+                    <p class="text-muted mb-2">Founder & CEO</p>
+                    <p class="small text-muted">
+                        Passionate about bringing authentic Nepali beauty products to the world while supporting local communities.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="team-member text-center">
+                    <div class="team-photo mb-3">
+                        <img src="{% static 'images/team-2.jpg' %}" alt="Team Member" class="img-fluid rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
+                    </div>
+                    <h5 class="fw-bold mb-2">Rajesh Thapa</h5>
+                    <p class="text-muted mb-2">Head of Operations</p>
+                    <p class="small text-muted">
+                        Expert in supply chain management and ensuring the highest quality standards for all our products.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="team-member text-center">
+                    <div class="team-photo mb-3">
+                        <img src="{% static 'images/team-3.jpg' %}" alt="Team Member" class="img-fluid rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
+                    </div>
+                    <h5 class="fw-bold mb-2">Anita Gurung</h5>
+                    <p class="text-muted mb-2">Product Curator</p>
+                    <p class="small text-muted">
+                        Beauty expert with deep knowledge of traditional Nepali ingredients and modern beauty trends.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-5 bg-primary text-white">
+    <div class="container text-center">
+        <h2 class="fw-bold mb-3">Join Our Beauty Journey</h2>
+        <p class="lead mb-4">Discover authentic beauty products from the heart of Nepal</p>
+        <a href="{% url 'dashboard:home' %}" class="btn btn-light btn-lg">Explore Products</a>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.hero-section {
+    height: 400px;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+}
+
+.hero-bg-gradient {
+    height: 400px;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+}
+
+.value-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(102, 126, 234, 0.1);
+    border-radius: 50%;
+}
+
+.team-photo img {
+    border: 4px solid white;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.team-member:hover .team-photo img {
+    transform: scale(1.05);
+    transition: transform 0.3s ease;
+}
+</style>
+{% endblock %}

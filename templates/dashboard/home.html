@@ -1,0 +1,780 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Everest Beauty - Rare Beauty Inspired Collection{% endblock %}
+
+{% block content %}
+<!-- Rare Beauty Inspired Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="hero-content">
+            <h1 class="hero-title">
+                <span id="dynamic-title">Find Your Rare</span>
+            </h1>
+            <p class="hero-subtitle" id="dynamic-subtitle">
+                Beauty is about finding confidence in your own skin and expressing your unique self.
+            </p>
+            <div class="hero-cta">
+                <a href="#featured-products" class="btn btn-primary btn-lg">
+                    <i class="fas fa-sparkles me-2"></i>
+                    Shop Collection
+                </a>
+                <a href="#about" class="btn btn-outline-primary btn-lg">
+                    <i class="fas fa-heart me-2"></i>
+                    Our Story
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Categories - Rare Beauty Style -->
+<section class="category-section">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold text-rare-pink">Shop by Category</h2>
+            <p class="text-secondary fs-5">Find your perfect beauty match</p>
+        </div>
+        <div class="category-grid">
+            <div class="category-card" data-aos="fade-up">
+                <i class="category-icon fas fa-magic"></i>
+                <h3 class="category-title">Face</h3>
+                <p class="category-description">Complexion, concealer, blush & highlight</p>
+                <a href="#" class="btn btn-sm btn-outline-primary mt-3">Shop Face</a>
+            </div>
+            <div class="category-card" data-aos="fade-up" data-aos-delay="100">
+                <i class="category-icon fas fa-eye"></i>
+                <h3 class="category-title">Eyes</h3>
+                <p class="category-description">Eyeshadow, liner, mascara & brows</p>
+                <a href="#" class="btn btn-sm btn-outline-primary mt-3">Shop Eyes</a>
+            </div>
+            <div class="category-card" data-aos="fade-up" data-aos-delay="200">
+                <i class="category-icon fas fa-kiss"></i>
+                <h3 class="category-title">Lips</h3>
+                <p class="category-description">Lipstick, gloss, liner & treatments</p>
+                <a href="#" class="btn btn-sm btn-outline-primary mt-3">Shop Lips</a>
+            </div>
+            <div class="category-card" data-aos="fade-up" data-aos-delay="300">
+                <i class="category-icon fas fa-leaf"></i>
+                <h3 class="category-title">Skincare</h3>
+                <p class="category-description">Cleansers, serums, moisturizers & masks</p>
+                <a href="#" class="btn btn-sm btn-outline-primary mt-3">Shop Skincare</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Products -->
+<section id="featured-products" class="py-5" style="background: var(--white);">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold text-rare-pink">Trending Now</h2>
+            <p class="text-secondary fs-5">Customer favorites that never disappoint</p>
+        </div>
+        <div class="product-grid">
+            {% for product in featured_products %}
+            <div class="card" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:100 }}">
+                <div class="position-relative">
+                    {% if product.images.first %}
+                        <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}" class="card-img-top">
+                    {% else %}
+                        <div class="card-img-top d-flex align-items-center justify-content-center" style="height: 280px; background: var(--rare-soft-pink);">
+                            <i class="fas fa-image fa-3x text-rare-pink"></i>
+                        </div>
+                    {% endif %}
+                    {% if product.discount_percentage > 0 %}
+                        <span class="badge position-absolute top-0 end-0 m-3" style="background: var(--rare-coral);">
+                            -{{ product.discount_percentage }}%
+                        </span>
+                    {% endif %}
+                    <div class="position-absolute top-0 start-0 m-3">
+                        <button class="btn btn-sm btn-light rounded-circle wishlist-btn" 
+                                data-product-id="{{ product.id }}"
+                                onclick="toggleWishlist({{ product.id }}, this)">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-text">{{ product.description|truncatewords:15 }}</p>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="card-price">
+                            {% if product.sale_price %}
+                                <span class="text-decoration-line-through text-muted me-2">Rs. {{ product.price }}</span>
+                                <span class="fw-bold text-rare-pink">Rs. {{ product.sale_price }}</span>
+                            {% else %}
+                                <span class="fw-bold text-rare-pink">Rs. {{ product.price }}</span>
+                            {% endif %}
+                        </div>
+                        <div class="text-warning">
+                            {% for i in "12345" %}
+                                {% if forloop.counter <= product.average_rating %}
+                                    <i class="fas fa-star"></i>
+                                {% else %}
+                                    <i class="far fa-star"></i>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <button type="button" 
+                            class="btn btn-primary w-100 add-to-cart-btn" 
+                            onclick="addToCart({{ product.id }})">
+                        <i class="fas fa-shopping-bag me-2"></i>Add to Bag
+                    </button>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <i class="fas fa-box-open fa-4x text-muted mb-3"></i>
+                <h5 class="text-muted">No featured products available</h5>
+                <p class="text-muted">Check back soon for exciting new products!</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Bestsellers Section -->
+<section class="py-5" style="background: var(--rare-soft-pink);">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold text-rare-pink">Bestsellers</h2>
+            <p class="text-secondary fs-5">The products everyone is talking about</p>
+        </div>
+        <div class="product-grid">
+            {% for product in bestseller_products %}
+            <div class="card" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:200 }}">
+                <div class="position-relative">
+                    {% if product.images.first %}
+                        <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}" class="card-img-top">
+                    {% else %}
+                        <div class="card-img-top d-flex align-items-center justify-content-center" style="height: 280px; background: var(--rare-cream);">
+                            <i class="fas fa-image fa-3x text-rare-pink"></i>
+                        </div>
+                    {% endif %}
+                    <span class="badge position-absolute top-0 end-0 m-3" style="background: var(--rare-pink);">
+                        Bestseller
+                    </span>
+                    <div class="position-absolute top-0 start-0 m-3">
+                        <button class="btn btn-sm btn-light rounded-circle wishlist-btn" 
+                                data-product-id="{{ product.id }}"
+                                onclick="toggleWishlist({{ product.id }}, this)">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-text">{{ product.description|truncatewords:15 }}</p>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="card-price">
+                            {% if product.sale_price %}
+                                <span class="text-decoration-line-through text-muted me-2">Rs. {{ product.price }}</span>
+                                <span class="fw-bold text-rare-pink">Rs. {{ product.sale_price }}</span>
+                            {% else %}
+                                <span class="fw-bold text-rare-pink">Rs. {{ product.price }}</span>
+                            {% endif %}
+                        </div>
+                        <div class="text-warning">
+                            {% for i in "12345" %}
+                                {% if forloop.counter <= product.average_rating %}
+                                    <i class="fas fa-star"></i>
+                                {% else %}
+                                    <i class="far fa-star"></i>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <button type="button" 
+                            class="btn btn-primary w-100 add-to-cart-btn" 
+                            onclick="addToCart({{ product.id }})">
+                        <i class="fas fa-shopping-bag me-2"></i>Add to Bag
+                    </button>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <i class="fas fa-crown fa-4x text-muted mb-3"></i>
+                <h5 class="text-muted">No bestsellers available</h5>
+                <p class="text-muted">Be the first to discover our amazing products!</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- New Arrivals -->
+<section class="py-5" style="background: var(--white);">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold text-rare-pink">New Arrivals</h2>
+            <p class="text-secondary fs-5">Fresh drops just for you</p>
+        </div>
+        <div class="product-grid">
+            {% for product in new_arrivals %}
+            <div class="card" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:300 }}">
+                <div class="position-relative">
+                    {% if product.images.first %}
+                        <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}" class="card-img-top">
+                    {% else %}
+                        <div class="card-img-top d-flex align-items-center justify-content-center" style="height: 280px; background: var(--rare-cream);">
+                            <i class="fas fa-image fa-3x text-rare-pink"></i>
+                        </div>
+                    {% endif %}
+                    <span class="badge position-absolute top-0 end-0 m-3" style="background: var(--rare-coral);">
+                        New
+                    </span>
+                    <div class="position-absolute top-0 start-0 m-3">
+                        <button class="btn btn-sm btn-light rounded-circle wishlist-btn" 
+                                data-product-id="{{ product.id }}"
+                                onclick="toggleWishlist({{ product.id }}, this)">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-text">{{ product.description|truncatewords:15 }}</p>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="card-price">
+                            {% if product.sale_price %}
+                                <span class="text-decoration-line-through text-muted me-2">Rs. {{ product.price }}</span>
+                                <span class="fw-bold text-rare-pink">Rs. {{ product.sale_price }}</span>
+                            {% else %}
+                                <span class="fw-bold text-rare-pink">Rs. {{ product.price }}</span>
+                            {% endif %}
+                        </div>
+                        <div class="text-warning">
+                            {% for i in "12345" %}
+                                {% if forloop.counter <= product.average_rating %}
+                                    <i class="fas fa-star"></i>
+                                {% else %}
+                                    <i class="far fa-star"></i>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <button type="button" 
+                            class="btn btn-primary w-100 add-to-cart-btn" 
+                            onclick="addToCart({{ product.id }})">
+                        <i class="fas fa-shopping-bag me-2"></i>Add to Bag
+                    </button>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <i class="fas fa-sparkles fa-4x text-muted mb-3"></i>
+                <h5 class="text-muted">New arrivals coming soon!</h5>
+                <p class="text-muted">Be the first to discover our latest beauty innovations</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- About Brand Section - Rare Beauty Inspired -->
+<section id="about" class="py-5" style="background: var(--rare-beige);">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6" data-aos="fade-right">
+                <h2 class="fw-bold text-rare-pink mb-4">Beauty for Everyone</h2>
+                <p class="fs-5 text-secondary mb-4">
+                    At Everest Beauty, we believe that beauty is about finding confidence in your own skin 
+                    and expressing your unique self. Our products are designed to help you feel comfortable, 
+                    beautiful, and authentic every single day.
+                </p>
+                <p class="text-secondary mb-4">
+                    From Nepal to the world, we're committed to creating high-quality, inclusive beauty 
+                    products that celebrate diversity and self-expression.
+                </p>
+                <a href="#" class="btn btn-primary">
+                    <i class="fas fa-arrow-right me-2"></i>
+                    Learn More About Us
+                </a>
+            </div>
+            <div class="col-lg-6" data-aos="fade-left">
+                <div class="text-center">
+                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-4" 
+                         style="width: 200px; height: 200px; background: var(--gradient-primary);">
+                        <i class="fas fa-heart fa-5x text-white"></i>
+                    </div>
+                    <h4 class="text-rare-pink mb-3">Mental Health Advocacy</h4>
+                    <p class="text-secondary">
+                        We're dedicated to breaking down unrealistic standards of perfection and supporting mental health initiatives worldwide.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Newsletter Signup - Rare Beauty Style -->
+<section class="py-5" style="background: var(--gradient-primary);">
+    <div class="container text-center">
+        <div class="row justify-content-center">
+            <div class="col-lg-8" data-aos="fade-up">
+                <h2 class="fw-bold text-white mb-4">Stay in the Loop</h2>
+                <p class="text-white fs-5 mb-4">
+                    Get the latest updates on new products, exclusive offers, and beauty tips delivered straight to your inbox.
+                </p>
+                <form class="row g-3 justify-content-center">
+                    <div class="col-md-6">
+                        <input type="email" class="form-control form-control-lg" placeholder="Enter your email address" required>
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-secondary btn-lg">
+                            <i class="fas fa-paper-plane me-2"></i>
+                            Subscribe
+                        </button>
+                    </div>
+                </form>
+                <p class="text-white mt-3 small">
+                    By subscribing, you agree to our Privacy Policy and Terms of Service.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<!-- AOS Animation Library -->
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+<style>
+/* Hero Section Enhancements */
+.hero-section {
+    background: var(--gradient-soft);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="%23E91E63" opacity="0.1"/><circle cx="80" cy="60" r="1.5" fill="%23FF6B6B" opacity="0.1"/><circle cx="60" cy="10" r="1" fill="%23FFB3B3" opacity="0.1"/></svg>');
+    background-size: 60px 60px;
+    animation: float 20s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+}
+
+.hero-title {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    transition: var(--transition);
+}
+
+/* Dynamic text animation */
+#dynamic-title, #dynamic-subtitle {
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+/* Enhanced card hover effects */
+.card {
+    transition: var(--transition);
+    border: none;
+}
+
+.card:hover {
+    border-color: rgba(233, 30, 99, 0.3) !important;
+}
+
+.card:hover .card-img-top {
+    transform: scale(1.03);
+}
+
+/* Wishlist button enhancement */
+.wishlist-btn {
+    transition: var(--transition);
+    border: none;
+    box-shadow: var(--shadow-sm);
+}
+
+.wishlist-btn:hover {
+    background: var(--rare-pink) !important;
+    color: white !important;
+    transform: scale(1.1);
+}
+
+.wishlist-btn.active {
+    background: var(--rare-pink) !important;
+    color: white !important;
+}
+
+.wishlist-btn.active i {
+    color: white !important;
+}
+
+/* Add to cart button loading state */
+.add-to-cart-btn.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+/* Custom animations */
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in {
+    animation: slideInUp 0.6s ease-out;
+}
+
+/* Newsletter section enhancement */
+form input:focus {
+    border-color: var(--white);
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.25);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: clamp(2.5rem, 8vw, 4rem);
+    }
+    
+    .hero-cta {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .hero-cta .btn {
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .product-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-section {
+        padding: 6rem 0 4rem;
+    }
+    
+    .card-body {
+        padding: 1.5rem;
+    }
+    
+    .category-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<!-- AOS Animation Library -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+<script>
+// Initialize AOS animations
+AOS.init({
+    duration: 800,
+    easing: 'ease-out',
+    once: true,
+    offset: 100
+});
+
+// Dynamic hero text - Rare Beauty inspired
+const heroTitles = [
+    "Find Your Rare",
+    "Express Yourself", 
+    "Beauty Redefined",
+    "Confidence Within",
+    "Authentically You",
+    "Rare Beauty"
+];
+
+const heroSubtitles = [
+    "Beauty is about finding confidence in your own skin and expressing your unique self.",
+    "Discover products that celebrate your individuality and make you feel amazing.",
+    "From Nepal to the world, we create beauty that's as unique as you are.",
+    "Self-expression through makeup and skincare that makes you feel confident.",
+    "Embrace your authentic beauty with products designed for everyone.",
+    "Quality, authenticity, and self-love in every product we create."
+];
+
+let currentIndex = 0;
+
+function updateHeroText() {
+    const titleElement = document.getElementById('dynamic-title');
+    const subtitleElement = document.getElementById('dynamic-subtitle');
+    
+    if (titleElement && subtitleElement) {
+        // Fade out
+        titleElement.style.opacity = '0';
+        titleElement.style.transform = 'translateY(20px)';
+        subtitleElement.style.opacity = '0';
+        subtitleElement.style.transform = 'translateY(20px)';
+        
+        setTimeout(() => {
+            titleElement.textContent = heroTitles[currentIndex % heroTitles.length];
+            subtitleElement.textContent = heroSubtitles[currentIndex % heroSubtitles.length];
+            
+            // Fade in
+            titleElement.style.opacity = '1';
+            titleElement.style.transform = 'translateY(0)';
+            subtitleElement.style.opacity = '1';
+            subtitleElement.style.transform = 'translateY(0)';
+            
+            currentIndex++;
+        }, 500);
+    }
+}
+
+// Start hero text rotation
+setInterval(updateHeroText, 4000);
+
+// Enhanced wishlist functionality
+function toggleWishlist(productId, buttonElement) {
+    const icon = buttonElement.querySelector('i');
+    const originalClass = icon.className;
+    
+    // Add loading state
+    buttonElement.disabled = true;
+    icon.className = 'fas fa-spinner fa-spin';
+    
+    // Simulate API call (replace with actual API endpoint)
+    fetch(`/wishlist/toggle/${productId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.added) {
+            buttonElement.classList.add('active');
+            icon.className = 'fas fa-heart';
+            showNotification('Added to wishlist! ❤️', 'success');
+        } else {
+            buttonElement.classList.remove('active');
+            icon.className = 'far fa-heart';
+            showNotification('Removed from wishlist', 'info');
+        }
+        buttonElement.disabled = false;
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        icon.className = originalClass;
+        buttonElement.disabled = false;
+        showNotification('Please sign in to use wishlist', 'warning');
+    });
+}
+
+// Enhanced add to cart functionality
+function addToCart(productId) {
+    const button = document.querySelector(`.add-to-cart-btn[onclick*="${productId}"]`);
+    const originalText = button.innerHTML;
+    
+    // Show loading state
+    button.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Adding...';
+    button.disabled = true;
+    button.classList.add('loading');
+    
+    // Simulate API call (replace with actual API endpoint)
+    fetch(`/cart/add/${productId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            'quantity': 1
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Success state
+            button.innerHTML = '<i class="fas fa-check me-2"></i>Added to Bag!';
+            button.classList.remove('loading');
+            button.classList.add('btn-success');
+            
+            showNotification('Product added to bag! 🛍️', 'success');
+            
+            // Update cart count if element exists
+            const cartBadge = document.querySelector('.fa-shopping-bag + .badge');
+            if (cartBadge && data.cart_count) {
+                cartBadge.textContent = data.cart_count;
+            }
+            
+            // Reset button after 2 seconds
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.disabled = false;
+                button.classList.remove('btn-success');
+            }, 2000);
+        } else {
+            throw new Error(data.error || 'Failed to add to cart');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        
+        // Error state
+        button.innerHTML = '<i class="fas fa-exclamation-triangle me-2"></i>Try Again';
+        button.classList.remove('loading');
+        button.classList.add('btn-danger');
+        
+        showNotification(error.message || 'Failed to add to bag. Please try again.', 'error');
+        
+        // Reset button after 2 seconds
+        setTimeout(() => {
+            button.innerHTML = originalText;
+            button.disabled = false;
+            button.classList.remove('btn-danger');
+        }, 2000);
+    });
+}
+
+// Utility functions
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+function showNotification(message, type) {
+    // Remove existing notifications
+    const existingNotifications = document.querySelectorAll('.toast-notification');
+    existingNotifications.forEach(notification => notification.remove());
+    
+    // Create notification
+    const notification = document.createElement('div');
+    notification.className = `toast-notification alert alert-${type === 'success' ? 'success' : type === 'error' ? 'danger' : type === 'warning' ? 'warning' : 'info'} position-fixed`;
+    notification.style.cssText = `
+        top: 100px; 
+        right: 20px; 
+        z-index: 9999; 
+        min-width: 300px;
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-xl);
+        border: none;
+        animation: slideInRight 0.5s ease-out;
+    `;
+    
+    const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : type === 'warning' ? '⚠️' : 'ℹ️';
+    
+    notification.innerHTML = `
+        <div class="d-flex align-items-center">
+            <span class="me-2">${icon}</span>
+            <span class="flex-grow-1">${message}</span>
+            <button type="button" class="btn-close ms-2" onclick="this.parentElement.parentElement.remove()"></button>
+        </div>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Auto-remove after 4 seconds
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.style.animation = 'slideOutRight 0.5s ease-out';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.remove();
+                }
+            }, 500);
+        }
+    }, 4000);
+}
+
+// Add CSS for notifications if not already present
+if (!document.querySelector('#notification-styles')) {
+    const style = document.createElement('style');
+    style.id = 'notification-styles';
+    style.textContent = `
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes slideOutRight {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+        }
+    `;
+    document.head.appendChild(style);
+}
+
+// Newsletter form enhancement
+document.addEventListener('DOMContentLoaded', function() {
+    const newsletterForm = document.querySelector('form');
+    if (newsletterForm) {
+        newsletterForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = this.querySelector('input[type="email"]').value;
+            const button = this.querySelector('button[type="submit"]');
+            const originalText = button.innerHTML;
+            
+            // Show loading
+            button.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Subscribing...';
+            button.disabled = true;
+            
+            // Simulate subscription (replace with actual API call)
+            setTimeout(() => {
+                showNotification('Thank you for subscribing! 💌', 'success');
+                this.querySelector('input[type="email"]').value = '';
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }, 1500);
+        });
+    }
+    
+    // Add scroll effects
+    window.addEventListener('scroll', function() {
+        const heroSection = document.querySelector('.hero-section');
+        const scrolled = window.pageYOffset;
+        const rate = scrolled * -0.5;
+        
+        if (heroSection) {
+            heroSection.style.transform = `translateY(${rate}px)`;
+        }
+    });
+});
+</script>
+{% endblock %}

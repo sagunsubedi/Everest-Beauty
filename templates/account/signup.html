@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}Sign Up - Everest Beauty{% endblock %}
+
+{% block extra_css %}
+<style>
+    .auth-wrapper { min-height: 70vh; display:flex; align-items:center; justify-content:center; }
+    .auth-card { width:100%; max-width:560px; border-radius:16px; box-shadow:0 12px 35px rgba(0,0,0,.08); overflow:hidden; border:1px solid #eef0f3; }
+    .auth-header { background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color:#fff; padding:28px 24px; text-align:center; }
+    .auth-header h1 { font-weight:700; margin:0; font-size:1.75rem; }
+    .auth-body { padding:28px; background:#fff; }
+    .btn-gradient { background: linear-gradient(45deg, var(--primary-color), #e91e63); border:none; }
+    .btn-gradient:hover { filter:brightness(1.05); transform: translateY(-1px); }
+    .brand-title { font-weight:700; color: #fff; opacity:.95; }
+    .helptext { display:none; }
+    .auth-links a { text-decoration:none; }
+    .auth-links a:hover { text-decoration:underline; }
+    .form-text-sm { font-size:.9rem; }
+    .divider { display:flex; align-items:center; text-align:center; color:#6c757d; }
+    .divider::before, .divider::after { content:""; flex:1; border-bottom:1px solid #e9ecef; }
+    .divider:not(:empty)::before { margin-right:.75em; }
+    .divider:not(:empty)::after { margin-left:.75em; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container auth-wrapper">
+    <div class="auth-card">
+        <div class="auth-header">
+            <div class="brand-title"><i class="fas fa-mountain me-2"></i>Everest Beauty</div>
+            <h1 class="mt-2">Create your account</h1>
+            <p class="mb-0">Join the Everest Beauty community</p>
+        </div>
+        <div class="auth-body">
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+            {% endif %}
+            <form method="post" action="{% url 'account_signup' %}" class="needs-validation" novalidate>
+                {% csrf_token %}
+                {{ form|crispy }}
+                {% if redirect_field_value %}
+                    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                {% endif %}
+                <button type="submit" class="btn btn-gradient w-100 py-2 mt-1">
+                    <i class="fas fa-user-plus me-1"></i> Create Account
+                </button>
+            </form>
+            <div class="d-flex justify-content-between mt-3 auth-links">
+                <a href="{% url 'account_login' %}">Already have an account? Sign in</a>
+            </div>
+            <div class="divider my-3">or</div>
+            <p class="text-center text-muted mb-0 form-text-sm">By signing up, you agree to our Terms and Privacy Policy.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

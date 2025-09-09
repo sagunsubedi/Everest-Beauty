@@ -1,0 +1,577 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Shopping Cart - Everest Beauty{% endblock %}
+
+{% block extra_css %}
+<style>
+    .cart-container {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+    
+    .cart-header {
+        background: linear-gradient(135deg, var(--primary-color), #e91e63);
+        color: white;
+        padding: 25px 30px;
+        text-align: center;
+    }
+    
+    .cart-header h1 {
+        margin: 0;
+        font-size: 2.2rem;
+        font-weight: 700;
+    }
+    
+    .cart-header p {
+        margin: 10px 0 0 0;
+        opacity: 0.9;
+        font-size: 1.1rem;
+    }
+    
+    .cart-item {
+        display: flex;
+        align-items: center;
+        padding: 25px 30px;
+        border-bottom: 1px solid #f0f0f0;
+        transition: all 0.3s ease;
+    }
+    
+    .cart-item:hover {
+        background: #f8f9fa;
+    }
+    
+    .cart-item:last-child {
+        border-bottom: none;
+    }
+    
+    .item-image {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 15px;
+        margin-right: 20px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .item-details {
+        flex: 1;
+    }
+    
+    .item-name {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: var(--text-dark);
+        margin-bottom: 5px;
+    }
+    
+    .item-brand {
+        color: var(--secondary-color);
+        font-size: 1rem;
+        margin-bottom: 10px;
+    }
+    
+    .item-price {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--primary-color);
+    }
+    
+    .item-original-price {
+        color: #6c757d;
+        text-decoration: line-through;
+        margin-left: 10px;
+        font-size: 1rem;
+    }
+    
+    .item-quantity {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin: 0 30px;
+    }
+    
+    .quantity-btn {
+        width: 35px;
+        height: 35px;
+        border: 2px solid var(--primary-color);
+        background: white;
+        color: var(--primary-color);
+        border-radius: 50%;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .quantity-btn:hover {
+        background: var(--primary-color);
+        color: white;
+    }
+    
+    .quantity-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+    
+    .quantity-input {
+        width: 50px;
+        height: 35px;
+        text-align: center;
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+    }
+    
+    .item-total {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        margin: 0 30px;
+        min-width: 100px;
+        text-align: right;
+    }
+    
+    .remove-btn {
+        background: none;
+        border: none;
+        color: #dc3545;
+        font-size: 1.2rem;
+        cursor: pointer;
+        padding: 10px;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+    }
+    
+    .remove-btn:hover {
+        background: #dc3545;
+        color: white;
+    }
+    
+    .cart-summary {
+        background: #f8f9fa;
+        padding: 30px;
+        border-radius: 0 0 20px 20px;
+    }
+    
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+        font-size: 1.1rem;
+    }
+    
+    .summary-row.total {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        border-top: 2px solid #e9ecef;
+        padding-top: 15px;
+        margin-top: 20px;
+    }
+    
+    .checkout-btn {
+        width: 100%;
+        padding: 18px;
+        background: var(--add-to-cart-bg);
+        border: none;
+        color: #fff;
+        border-radius: 18px;
+        font-size: 1.2rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: var(--transition);
+        box-shadow: var(--shadow);
+        margin-top: 20px;
+        letter-spacing: 0.5px;
+    }
+    .checkout-btn:hover {
+        background: var(--add-to-cart-hover);
+        color: #fff;
+        transform: translateY(-2px) scale(1.03);
+        box-shadow: var(--shadow-hover);
+    }
+    .checkout-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+    }
+    
+    .empty-cart {
+        text-align: center;
+        padding: 60px 30px;
+    }
+    
+    .empty-cart i {
+        font-size: 4rem;
+        color: #dee2e6;
+        margin-bottom: 20px;
+    }
+    
+    .empty-cart h3 {
+        color: #6c757d;
+        margin-bottom: 20px;
+    }
+    
+    .continue-shopping {
+        background: var(--primary-color);
+        color: white;
+        padding: 15px 30px;
+        border: none;
+        border-radius: 25px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s ease;
+    }
+    
+    .continue-shopping:hover {
+        background: #d63384;
+        color: white;
+        text-decoration: none;
+        transform: translateY(-2px);
+    }
+    
+    .cart-notifications {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+    }
+    
+    .notification {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        padding: 15px 20px;
+        margin-bottom: 10px;
+        border-left: 4px solid var(--primary-color);
+        animation: slideIn 0.3s ease;
+    }
+    
+    .notification.success {
+        border-left-color: #28a745;
+    }
+    
+    .notification.error {
+        border-left-color: #dc3545;
+    }
+    
+    @keyframes slideIn {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    
+    .loading {
+        opacity: 0.6;
+        pointer-events: none;
+    }
+    
+    .loading::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 20px;
+        height: 20px;
+        margin: -10px 0 0 -10px;
+        border: 2px solid #f3f3f3;
+        border-top: 2px solid var(--primary-color);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:home' %}">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Shopping Cart</li>
+        </ol>
+    </nav>
+
+    {% if cart_items %}
+    <div class="cart-container">
+        <div class="cart-header">
+            <h1><i class="fas fa-shopping-cart"></i> Your Shopping Cart</h1>
+            <p>{{ cart.total_items }} item{{ cart.total_items|pluralize }} • Total: Rs. {{ cart.total_amount }}</p>
+        </div>
+
+        <div class="cart-items">
+            {% for item in cart_items %}
+            <div class="cart-item" id="cart-item-{{ item.id }}">
+                <img src="{{ item.product.main_image.url }}" alt="{{ item.product.name }}" class="item-image">
+                
+                <div class="item-details">
+                    <h5 class="item-name">{{ item.product.name }}</h5>
+                    <p class="item-brand">by {{ item.product.brand.name }}</p>
+                    <div class="item-price">
+                        Rs. {{ item.product.current_price }}
+                        {% if item.product.original_price > item.product.current_price %}
+                            <span class="item-original-price">Rs. {{ item.product.original_price }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="item-quantity">
+                    <button class="quantity-btn" onclick="updateQuantity({{ item.id }}, -1)" {% if item.quantity <= 1 %}disabled{% endif %}>
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    <input type="number" class="quantity-input" value="{{ item.quantity }}" min="1" max="10" 
+                           onchange="updateQuantity({{ item.id }}, 0, this.value)">
+                    <button class="quantity-btn" onclick="updateQuantity({{ item.id }}, 1)" {% if item.quantity >= 10 %}disabled{% endif %}>
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+
+                <div class="item-total" id="item-total-{{ item.id }}">
+                    Rs. {{ item.total_price }}
+                </div>
+
+                <button class="remove-btn" onclick="removeFromCart({{ item.id }})" title="Remove item">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="cart-summary">
+            <div class="summary-row">
+                <span>Subtotal:</span>
+                <span>Rs. {{ cart.subtotal }}</span>
+            </div>
+            <div class="summary-row">
+                <span>Delivery Fee:</span>
+                <span>{% if cart.total_amount >= 1000 %}Free{% else %}Rs. 100{% endif %}</span>
+            </div>
+            {% if cart.total_amount < 1000 %}
+            <div class="summary-row">
+                <span>Free delivery on orders above Rs. 1000</span>
+                <span class="text-success">Save Rs. 100</span>
+            </div>
+            {% endif %}
+            <div class="summary-row total">
+                <span>Total:</span>
+                <span id="cart-total">Rs. {{ cart.total_amount }}</span>
+            </div>
+
+            <button class="checkout-btn" onclick="proceedToCheckout()">
+                <i class="fas fa-credit-card"></i> Proceed to Checkout
+            </button>
+        </div>
+    </div>
+    {% else %}
+    <div class="cart-container">
+        <div class="empty-cart">
+            <i class="fas fa-shopping-cart"></i>
+            <h3>Your cart is empty</h3>
+            <p>Looks like you haven't added any products to your cart yet.</p>
+            <a href="{% url 'dashboard:home' %}" class="continue-shopping">
+                <i class="fas fa-arrow-left"></i> Continue Shopping
+            </a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Notifications -->
+<div class="cart-notifications" id="notifications"></div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function updateQuantity(itemId, change, newValue = null) {
+        const itemElement = document.getElementById(`cart-item-${itemId}`);
+        const quantityInput = itemElement.querySelector('.quantity-input');
+        const minusBtn = itemElement.querySelector('.quantity-btn:first-child');
+        const plusBtn = itemElement.querySelector('.quantity-btn:last-child');
+        
+        let quantity;
+        if (newValue !== null) {
+            quantity = parseInt(newValue);
+        } else {
+            quantity = parseInt(quantityInput.value) + change;
+        }
+        
+        // Validate quantity
+        if (quantity < 1) quantity = 1;
+        if (quantity > 10) quantity = 10;
+        
+        // Update input value
+        quantityInput.value = quantity;
+        
+        // Update button states
+        minusBtn.disabled = quantity <= 1;
+        plusBtn.disabled = quantity >= 10;
+        
+        // Send update to server
+        fetch('/api/cart/update/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify({
+                item_id: itemId,
+                quantity: quantity
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Update item total
+                document.getElementById(`item-total-${itemId}`).textContent = `Rs. ${data.item_total}`;
+                
+                // Update cart summary
+                updateCartSummary(data.cart_total, data.subtotal);
+                
+                // Update cart count in header
+                updateCartCount();
+                
+                showNotification('Quantity updated successfully!', 'success');
+            } else {
+                showNotification(data.message || 'Failed to update quantity', 'error');
+                // Revert quantity input
+                quantityInput.value = data.original_quantity || 1;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showNotification('Failed to update quantity', 'error');
+        });
+    }
+    
+    function removeFromCart(itemId) {
+        if (!confirm('Are you sure you want to remove this item from your cart?')) {
+            return;
+        }
+        
+        const itemElement = document.getElementById(`cart-item-${itemId}`);
+        itemElement.classList.add('loading');
+        
+        fetch('/api/cart/remove/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify({
+                item_id: itemId
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Remove item from DOM
+                itemElement.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    itemElement.remove();
+                    
+                    // Check if cart is empty
+                    const remainingItems = document.querySelectorAll('.cart-item');
+                    if (remainingItems.length === 0) {
+                        location.reload(); // Reload to show empty cart
+                    }
+                }, 300);
+                
+                // Update cart summary
+                updateCartSummary(data.cart_total, data.subtotal);
+                
+                // Update cart count in header
+                updateCartCount();
+                
+                showNotification('Item removed from cart successfully!', 'success');
+            } else {
+                showNotification(data.message || 'Failed to remove item', 'error');
+                itemElement.classList.remove('loading');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showNotification('Failed to remove item', 'error');
+            itemElement.classList.remove('loading');
+        });
+    }
+    
+    function updateCartSummary(cartTotal, subtotal) {
+        // Update cart header
+        const cartHeader = document.querySelector('.cart-header p');
+        const cartItems = document.querySelectorAll('.cart-item');
+        cartHeader.textContent = `${cartItems.length} item${cartItems.length !== 1 ? 's' : ''} • Total: Rs. ${cartTotal}`;
+        
+        // Update cart total
+        document.getElementById('cart-total').textContent = `Rs. ${cartTotal}`;
+        
+        // Update subtotal if available
+        if (subtotal !== undefined) {
+            const subtotalElement = document.querySelector('.summary-row:first-child span:last-child');
+            if (subtotalElement) {
+                subtotalElement.textContent = `Rs. ${subtotal}`;
+            }
+        }
+    }
+    
+    function proceedToCheckout() {
+        const checkoutBtn = document.querySelector('.checkout-btn');
+        checkoutBtn.disabled = true;
+        checkoutBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+        
+        // Redirect to checkout page
+        setTimeout(() => {
+            window.location.href = '/orders/checkout/';
+        }, 1000);
+    }
+    
+    function showNotification(message, type = 'info') {
+        const notifications = document.getElementById('notifications');
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.innerHTML = `
+            <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+            ${message}
+        `;
+        
+        notifications.appendChild(notification);
+        
+        // Remove notification after 3 seconds
+        setTimeout(() => {
+            notification.style.animation = 'slideOut 0.3s ease';
+            setTimeout(() => {
+                notification.remove();
+            }, 300);
+        }, 3000);
+    }
+    
+    // Add slideOut animation
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes slideOut {
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+    `;
+    document.head.appendChild(style);
+</script>
+{% endblock %}

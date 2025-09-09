@@ -1,0 +1,668 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ product.name }} - Everest Beauty{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Glassmorphism and luxury accents */
+    .product-gallery {
+        position: relative;
+        background: linear-gradient(120deg, #f2e9e4 0%, #c9ada7 100%);
+        border-radius: 24px;
+        box-shadow: 0 8px 32px rgba(34,34,59,0.13);
+        padding: 2rem 1.5rem 1.5rem 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    .main-image {
+        border-radius: 18px;
+        box-shadow: 0 8px 32px rgba(34,34,59,0.13);
+        transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+        background: #fff;
+    }
+    .main-image:hover {
+        transform: scale(1.03) rotate(-1deg);
+        box-shadow: 0 12px 36px rgba(34,34,59,0.18);
+    }
+    .thumbnail-images {
+        display: flex;
+        gap: 12px;
+        margin-top: 18px;
+        justify-content: flex-start;
+    }
+    .thumbnail {
+        width: 70px;
+        height: 70px;
+        object-fit: cover;
+        border-radius: 12px;
+        cursor: pointer;
+        border: 2px solid #eee;
+        transition: all 0.22s cubic-bezier(.4,0,.2,1);
+        background: #fff;
+    }
+    .thumbnail:hover,
+    .thumbnail.active {
+        border-color: var(--add-to-cart-bg);
+        transform: scale(1.08) rotate(-2deg);
+        box-shadow: 0 2px 8px var(--add-to-cart-bg, #ef8354, 0.12);
+    }
+    .product-info {
+        padding: 2.2rem 2rem 2rem 2rem;
+        background: rgba(255,255,255,0.85);
+        border-radius: 24px;
+        box-shadow: 0 8px 32px rgba(34,34,59,0.10);
+        backdrop-filter: blur(6px);
+        position: relative;
+    }
+    .product-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--primary);
+        margin-bottom: 10px;
+        letter-spacing: 1px;
+    }
+    .product-brand {
+        color: var(--highlight);
+        font-size: 1.15rem;
+        margin-bottom: 18px;
+        font-weight: 600;
+    }
+    .product-rating {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 22px;
+    }
+    .stars {
+        color: #ffd700;
+        font-size: 1.3rem;
+        letter-spacing: 1px;
+    }
+    .price-section {
+        margin: 28px 0 18px 0;
+        padding: 22px 24px;
+        background: linear-gradient(120deg, #fff 0%, #f2e9e4 100%);
+        border-radius: 18px;
+        border-left: 5px solid var(--add-to-cart-bg);
+        box-shadow: 0 2px 12px rgba(239,131,84,0.08);
+        display: flex;
+        align-items: center;
+        gap: 18px;
+    }
+    .current-price {
+        font-size: 2.7rem;
+        font-weight: 900;
+        color: var(--add-to-cart-bg);
+        letter-spacing: 1px;
+        margin-right: 10px;
+    }
+    .original-price {
+        font-size: 1.3rem;
+        color: #bfc0c0;
+        text-decoration: line-through;
+        margin-left: 12px;
+    }
+    .discount-badge {
+        background: linear-gradient(90deg, #ef8354 0%, #d7263d 100%);
+        color: #fff;
+        padding: 6px 18px;
+        border-radius: 18px;
+        font-size: 1rem;
+        font-weight: 700;
+        margin-left: 15px;
+        box-shadow: 0 2px 8px rgba(239,131,84,0.13);
+    }
+    .quantity-selector {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        margin: 28px 0 18px 0;
+    }
+    .quantity-btn {
+        width: 44px;
+        height: 44px;
+        border: 2px solid var(--add-to-cart-bg);
+        background: #fff;
+        color: var(--add-to-cart-bg);
+        border-radius: 50%;
+        font-size: 1.3rem;
+        cursor: pointer;
+        transition: var(--transition);
+        font-weight: 700;
+    }
+    .quantity-btn:hover {
+        background: var(--add-to-cart-bg);
+        color: #fff;
+        box-shadow: 0 2px 8px var(--add-to-cart-bg, #ef8354, 0.12);
+    }
+    .quantity-input {
+        width: 64px;
+        height: 44px;
+        text-align: center;
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        font-size: 1.2rem;
+        font-weight: 700;
+        background: #f8f9fa;
+    }
+    .action-buttons {
+        display: flex;
+        gap: 18px;
+        margin: 28px 0 0 0;
+    }
+    .btn-add-to-cart {
+        flex: 2;
+        padding: 16px 0;
+        background: linear-gradient(90deg, #ef8354 0%, #d7263d 100%);
+        border: none;
+        color: #fff;
+        border-radius: 25px;
+        font-size: 1.15rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: var(--transition);
+        box-shadow: 0 5px 15px rgba(239, 131, 84, 0.18);
+        letter-spacing: 0.5px;
+    }
+    .btn-add-to-cart:hover {
+        background: linear-gradient(90deg, #d7263d 0%, #ef8354 100%);
+        color: #fff;
+        transform: translateY(-2px) scale(1.04);
+        box-shadow: 0 8px 25px rgba(239, 131, 84, 0.22);
+    }
+    .btn-wishlist {
+        width: 54px;
+        height: 54px;
+        border: 2px solid var(--add-to-cart-bg);
+        background: #fff;
+        color: var(--add-to-cart-bg);
+        border-radius: 50%;
+        cursor: pointer;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+    }
+    .btn-wishlist:hover,
+    .btn-wishlist.active {
+        background: var(--add-to-cart-bg);
+        color: #fff;
+        border-color: var(--add-to-cart-bg);
+        box-shadow: 0 2px 8px var(--add-to-cart-bg, #ef8354, 0.12);
+    }
+    .product-details {
+        margin: 48px 0 0 0;
+    }
+    .detail-tabs {
+        border-bottom: 2px solid #e9ecef;
+        margin-bottom: 32px;
+        display: flex;
+        gap: 8px;
+    }
+    .tab-button {
+        padding: 15px 32px;
+        background: none;
+        border: none;
+        color: #bfc0c0;
+        font-size: 1.15rem;
+        font-weight: 700;
+        cursor: pointer;
+        border-bottom: 3px solid transparent;
+        transition: var(--transition);
+        border-radius: 12px 12px 0 0;
+    }
+    .tab-button.active, .tab-button:hover {
+        color: var(--add-to-cart-bg);
+        border-bottom-color: var(--add-to-cart-bg);
+        background: #f8f9fa;
+    }
+    .tab-content {
+        display: none;
+        padding: 28px 0 0 0;
+        background: #fff;
+        border-radius: 0 0 18px 18px;
+        box-shadow: 0 2px 8px rgba(34,34,59,0.06);
+    }
+    .tab-content.active {
+        display: block;
+    }
+    .ingredients-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 18px;
+        margin: 22px 0;
+    }
+    .ingredient-item {
+        background: #f8f9fa;
+        padding: 18px;
+        border-radius: 12px;
+        border-left: 5px solid var(--highlight);
+        font-weight: 600;
+    }
+    .reviews-section {
+        margin: 44px 0 0 0;
+    }
+    .review-item {
+        background: linear-gradient(120deg, #fff 0%, #f2e9e4 100%);
+        padding: 24px 22px;
+        border-radius: 18px;
+        box-shadow: 0 2px 12px rgba(34,34,59,0.07);
+        margin-bottom: 24px;
+        border-left: 5px solid var(--add-to-cart-bg);
+        position: relative;
+    }
+    .review-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    .reviewer-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .reviewer-avatar {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: var(--highlight);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: 700;
+        font-size: 1.2rem;
+        box-shadow: 0 2px 8px rgba(34,34,59,0.10);
+    }
+    .verified-badge {
+        background: #4ecdc4;
+        color: #fff;
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        margin-left: 8px;
+    }
+    .stock-status {
+        display: inline-block;
+        padding: 10px 18px;
+        border-radius: 22px;
+        font-size: 1.05rem;
+        font-weight: 700;
+        margin: 18px 0 0 0;
+        letter-spacing: 0.5px;
+    }
+    .in-stock {
+        background: #e6fff7;
+        color: #1b7c6e;
+        border: 1.5px solid #4ecdc4;
+    }
+    .low-stock {
+        background: #fffbe6;
+        color: #bfa600;
+        border: 1.5px solid #ffe066;
+    }
+    .out-of-stock {
+        background: #ffe6e6;
+        color: #d7263d;
+        border: 1.5px solid #d7263d;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:home' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'products:category_products' product.category.slug %}">{{ product.category.name }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <!-- Product Gallery -->
+        <div class="col-lg-6">
+            <div class="product-gallery">
+                <img src="{{ product.main_image.url }}" alt="{{ product.name }}" class="img-fluid main-image" id="mainImage">
+                
+                {% if product.images.all %}
+                <div class="thumbnail-images">
+                    <img src="{{ product.main_image.url }}" alt="{{ product.name }}" class="thumbnail active" onclick="changeMainImage(this.src)">
+                    {% for image in product.images.all %}
+                    <img src="{{ image.image.url }}" alt="{{ product.name }}" class="thumbnail" onclick="changeMainImage(this.src)">
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Product Information -->
+        <div class="col-lg-6">
+            <div class="product-info">
+                <h1 class="product-title">{{ product.name }}</h1>
+                <p class="product-brand">by {{ product.brand.name }}</p>
+                
+                <div class="product-rating">
+                    <div class="stars">
+                        {% for i in "12345" %}
+                            {% if forloop.counter <= product.average_rating %}
+                                <i class="fas fa-star"></i>
+                            {% else %}
+                                <i class="far fa-star"></i>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <span>({{ product.review_count }} reviews)</span>
+                </div>
+
+                <!-- Stock Status -->
+                <div class="stock-status {% if product.stock_status == 'in_stock' %}in-stock{% elif product.stock_status == 'low_stock' %}low-stock{% else %}out-of-stock{% endif %}">
+                    {% if product.stock_status == 'in_stock' %}
+                        <i class="fas fa-check-circle"></i> In Stock
+                    {% elif product.stock_status == 'low_stock' %}
+                        <i class="fas fa-exclamation-triangle"></i> Low Stock ({{ product.inventory_set.first.quantity }} left)
+                    {% else %}
+                        <i class="fas fa-times-circle"></i> Out of Stock
+                    {% endif %}
+                </div>
+
+                <!-- Price Section -->
+                <div class="price-section">
+                    <span class="current-price">Rs. {{ product.current_price }}</span>
+                    {% if product.original_price > product.current_price %}
+                        <span class="original-price">Rs. {{ product.original_price }}</span>
+                        <span class="discount-badge">{{ product.discount_percentage }}% OFF</span>
+                    {% endif %}
+                </div>
+
+                <!-- Quantity Selector -->
+                <div class="quantity-selector">
+                    <label for="quantity">Quantity:</label>
+                    <button class="quantity-btn" type="button" onclick="changeQuantity(-1)">-</button>
+                    <input type="number" id="quantity" class="quantity-input" value="1" min="1" max="10" onchange="syncQuantityInput()">
+                    <button class="quantity-btn" type="button" onclick="changeQuantity(1)">+</button>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button type="button" class="btn-add-to-cart" onclick="addToCart('{{ product.id }}')">
+                        <i class="fas fa-shopping-cart"></i> Add to Cart
+                    </button>
+                    <button class="btn-wishlist {% if product in user.wishlist_set.all %}active{% endif %}" onclick="toggleWishlist('{{ product.id }}')">
+                        <i class="fas fa-heart"></i>
+                    </button>
+                </div>
+
+                <!-- Product Highlights -->
+                <div class="mt-4">
+                    <h5><i class="fas fa-check-circle text-success"></i> Free Delivery</h5>
+                    <h5><i class="fas fa-check-circle text-success"></i> 30-Day Return Policy</h5>
+                    <h5><i class="fas fa-check-circle text-success"></i> Authentic Products</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Details Tabs -->
+    <div class="product-details">
+        <div class="detail-tabs">
+            <button class="tab-button active" onclick="showTab('description')">Description</button>
+            <button class="tab-button" onclick="showTab('ingredients')">Ingredients</button>
+            <button class="tab-button" onclick="showTab('how-to-use')">How to Use</button>
+            <button class="tab-button" onclick="showTab('reviews')">Reviews</button>
+        </div>
+
+        <!-- Description Tab -->
+        <div id="description" class="tab-content active">
+            <div class="row">
+                <div class="col-md-8">
+                    <h4>Product Description</h4>
+                    <p>{{ product.description|linebreaks }}</p>
+                    
+                    {% if product.features %}
+                    <h5>Key Features:</h5>
+                    <ul>
+                        {% for feature in product.features %}
+                        <li>{{ feature }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6>Product Details</h6>
+                            <p><strong>Category:</strong> {{ product.category.name }}</p>
+                            <p><strong>Brand:</strong> {{ product.brand.name }}</p>
+                            <p><strong>Weight:</strong> {{ product.weight }}g</p>
+                            <p><strong>SKU:</strong> {{ product.sku }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ingredients Tab -->
+        <div id="ingredients" class="tab-content">
+            <h4>Ingredients</h4>
+            {% if product.ingredients %}
+            <div class="ingredients-list">
+                {% for ingredient in product.ingredients %}
+                <div class="ingredient-item">
+                    <strong>{{ ingredient.name }}</strong>
+                    <p class="mb-0">{{ ingredient.description }}</p>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p>Ingredients information not available.</p>
+            {% endif %}
+        </div>
+
+        <!-- How to Use Tab -->
+        <div id="how-to-use" class="tab-content">
+            <h4>How to Use</h4>
+            {% if product.how_to_use %}
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Application Steps:</h5>
+                    <ol>
+                        {% for step in product.how_to_use %}
+                        <li>{{ step }}</li>
+                        {% endfor %}
+                    </ol>
+                </div>
+                <div class="col-md-6">
+                    <h5>Tips:</h5>
+                    <ul>
+                        <li>Always patch test before full application</li>
+                        <li>Store in a cool, dry place</li>
+                        <li>Use within 12 months of opening</li>
+                    </ul>
+                </div>
+            </div>
+            {% else %}
+            <p>Usage instructions not available.</p>
+            {% endif %}
+        </div>
+
+        <!-- Reviews Tab -->
+        <div id="reviews" class="tab-content">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4>Customer Reviews</h4>
+                <button class="btn btn-primary" onclick="showReviewForm()">
+                    <i class="fas fa-plus"></i> Write a Review
+                </button>
+            </div>
+
+            {% if product.review_set.all %}
+            <div class="reviews-section">
+                {% for review in product.review_set.all %}
+                <div class="review-item">
+                    <div class="review-header">
+                        <div class="reviewer-info">
+                            <div class="reviewer-avatar">
+                                {{ review.user.username|first|upper }}
+                            </div>
+                            <div>
+                                <h6 class="mb-0">{{ review.user.username }}</h6>
+                                <div class="stars">
+                                    {% for i in "12345" %}
+                                        {% if forloop.counter <= review.rating %}
+                                            <i class="fas fa-star"></i>
+                                        {% else %}
+                                            <i class="far fa-star"></i>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            {% if review.is_verified_purchase %}
+                            <span class="verified-badge">Verified Purchase</span>
+                            {% endif %}
+                            <small class="text-muted">{{ review.created_at|date:"M d, Y" }}</small>
+                        </div>
+                    </div>
+                    
+                    <p>{{ review.comment }}</p>
+                    
+                    {% if review.images.all %}
+                    <div class="review-images">
+                        {% for image in review.images.all %}
+                        <img src="{{ image.image.url }}" alt="Review image" class="img-thumbnail" style="width: 80px; height: 80px; object-fit: cover;">
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p>No reviews yet. Be the first to review this product!</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function changeMainImage(src) {
+        document.getElementById('mainImage').src = src;
+        
+        // Update active thumbnail
+        document.querySelectorAll('.thumbnail').forEach(thumb => {
+            thumb.classList.remove('active');
+        });
+        event.target.classList.add('active');
+    }
+    
+    function changeQuantity(change) {
+        const input = document.getElementById('quantity');
+        let value = parseInt(input.value) + change;
+        if (value < 1) value = 1;
+        if (value > 10) value = 10;
+        input.value = value;
+    }
+    function syncQuantityInput() {
+        const input = document.getElementById('quantity');
+        let value = parseInt(input.value);
+        if (isNaN(value) || value < 1) value = 1;
+        if (value > 10) value = 10;
+        input.value = value;
+    }
+    function addToCart(productId) {
+        const btn = document.querySelector('.btn-add-to-cart');
+        const quantity = document.getElementById('quantity').value;
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
+        fetch('/api/cart/add/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify({
+                product_id: productId,
+                quantity: parseInt(quantity)
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showNotification('Product added to cart successfully!', 'success');
+                updateCartCount && updateCartCount();
+            } else {
+                showNotification(data.message || 'Failed to add product to cart', 'error');
+            }
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-shopping-cart"></i> Add to Cart';
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showNotification('Failed to add product to cart', 'error');
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-shopping-cart"></i> Add to Cart';
+        });
+    }
+    
+    function toggleWishlist(productId) {
+        const button = event.target.closest('.btn-wishlist');
+        const isActive = button.classList.contains('active');
+        
+        fetch(`/api/wishlist/${isActive ? 'remove' : 'add'}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify({
+                product_id: productId
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                button.classList.toggle('active');
+                showNotification(
+                    isActive ? 'Removed from wishlist' : 'Added to wishlist', 
+                    'success'
+                );
+                updateWishlistCount();
+            } else {
+                showNotification(data.message || 'Failed to update wishlist', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showNotification('Failed to update wishlist', 'error');
+        });
+    }
+    
+    function showTab(tabName) {
+        // Hide all tab contents
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.remove('active');
+        });
+        
+        // Remove active class from all tab buttons
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.classList.remove('active');
+        });
+        
+        // Show selected tab content
+        document.getElementById(tabName).classList.add('active');
+        
+        // Add active class to clicked button
+        event.target.classList.add('active');
+    }
+    
+    function showReviewForm() {
+        // This will be implemented when we create the review form
+        showNotification('Review form coming soon!', 'info');
+    }
+</script>
+{% endblock %}

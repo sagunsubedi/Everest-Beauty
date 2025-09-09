@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Edit Address - Everest Beauty{% endblock %}
+{% block content %}
+<div class="container mt-4">
+	<nav aria-label="breadcrumb">
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item"><a href="{% url 'dashboard:home' %}">Home</a></li>
+			<li class="breadcrumb-item"><a href="{% url 'order_management:shipping_address' %}">Shipping Addresses</a></li>
+			<li class="breadcrumb-item active" aria-current="page">Edit Address</li>
+		</ol>
+	</nav>
+
+	<div class="card shadow-sm">
+		<div class="card-body">
+			<h5 class="card-title">Edit Address</h5>
+			<p class="text-muted mb-0">Address form will be implemented.</p>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+
